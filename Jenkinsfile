@@ -25,9 +25,6 @@ node {
   
     stage('Build Project') {
       // build project via maven
-      steps {
-                      sh 'mvn -Dmaven.test.failure.ignore=true install'
-             }
       sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore=true clean install"
     }
 
