@@ -25,7 +25,7 @@ node {
   
     stage('Build Project') {
       // build project via maven
-      bat "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore=true clean install"
+      sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore=true clean install"
     }
 
     stage('Build Docker Image with new code') {
