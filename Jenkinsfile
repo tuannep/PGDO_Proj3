@@ -3,7 +3,6 @@ node {
     def application = "devopsexample"
     
     //Its mandatory to change the Docker Hub Account ID after this Repo is forked by an other person
-
     def dockerhubaccountid = "tuannep"
 	
     // reference to maven
@@ -26,11 +25,9 @@ node {
   
     stage('Build Project') {
       // build project via maven
-      bat "'${mvnHome}/bin/mvn' clean install"
+      sh "'${mvnHome}/bin/mvn' clean install"
     }
-	stage("test"){
-            bat "ipconfig"
-        }
+
     stage('Build Docker Image with new code') {
       // build docker image
       dockerImage = docker.build("${dockerhubaccountid}/${application}:${env.BUILD_NUMBER}")
@@ -43,23 +40,23 @@ node {
              dockerImage.push("latest")
             }
 	}
-   
+
    stage('Remove running container with old code'){
 	   //remove the container which is already running, when running 1st time named container will not be available so we are usign 'True'
 	   //added -a option to remove stopped container also
-	  bat "docker rm -f \$(docker ps -a -f name=devopsexample -q) || true"
-	       
+	  sh "docker rm -f \$(docker ps -a -f name=devopsexample -q) || true"
+
     }
-	
+
     stage('Deploy Docker Image with new changes'){
-	        
+
 	    //start container with the remote image
-	  bat "docker run --name devopsexample -d -p 2222:2222 ${dockerhubaccountid}/${application}:${env.BUILD_NUMBER}"
-	  
+	  sh "docker run --name devopsexample -d -p 2222:2222 ${dockerhubaccountid}/${application}:${env.BUILD_NUMBER}"
+
     }
-	
+
     stage('Remove old images') {
 		// remove docker old images
-		bat("docker rmi ${dockerhubaccountid}/${application}:latest -f")
+		sh("docker rmi ${dockerhubaccountid}/${application}:latest -f")
    }
 }
