@@ -26,7 +26,7 @@ node {
   
     stage('Build Project') {
       // build project via maven
-      sh "'${mvnHome}/bin/mvn' clean install"
+      bat "'${mvnHome}/bin/mvn' clean install"
     }
 	stage("test"){
             bat "ipconfig"
@@ -47,19 +47,19 @@ node {
    stage('Remove running container with old code'){
 	   //remove the container which is already running, when running 1st time named container will not be available so we are usign 'True'
 	   //added -a option to remove stopped container also
-	  sh "docker rm -f \$(docker ps -a -f name=devopsexample -q) || true"   
+	  bat "docker rm -f \$(docker ps -a -f name=devopsexample -q) || true"
 	       
     }
 	
     stage('Deploy Docker Image with new changes'){
 	        
 	    //start container with the remote image
-	  sh "docker run --name devopsexample -d -p 2222:2222 ${dockerhubaccountid}/${application}:${env.BUILD_NUMBER}"  
+	  bat "docker run --name devopsexample -d -p 2222:2222 ${dockerhubaccountid}/${application}:${env.BUILD_NUMBER}"
 	  
     }
 	
     stage('Remove old images') {
 		// remove docker old images
-		sh("docker rmi ${dockerhubaccountid}/${application}:latest -f")
+		bat("docker rmi ${dockerhubaccountid}/${application}:latest -f")
    }
 }
