@@ -3,7 +3,7 @@ node {
     def application = "devopsexample"
     
     //Its mandatory to change the Docker Hub Account ID after this Repo is forked by an other person
-//     def dockerhubaccountid = "vikidvg"
+
     def dockerhubaccountid = "tuannep"
 	
     // reference to maven
@@ -28,7 +28,9 @@ node {
       // build project via maven
       sh "'${mvnHome}/bin/mvn' clean install"
     }
-		
+	stage("test"){
+            bat "ipconfig"
+        }
     stage('Build Docker Image with new code') {
       // build docker image
       dockerImage = docker.build("${dockerhubaccountid}/${application}:${env.BUILD_NUMBER}")
